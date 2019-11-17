@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { graphql } from 'react-apollo'
-import { getAuthorsQuery } from '../queries/queries'
-
+import { graphql} from 'react-apollo'
+import { getAuthorsQuery, AddBookMutation } from '../queries/queries'
+import {compose} from 'react-apollo'
 
 function AddBook(props) {
   
@@ -50,4 +50,7 @@ const [AuthorId, setAuthorId] = useState("")
   )
 }
 
-export default graphql(getAuthorsQuery)(AddBook)
+export default compose(
+  graphql(getAuthorsQuery, { name:"getAuthorsQuery"}),
+  graphql(addBookMutation, { name:"addBookMutation"})
+)(AddBook)
