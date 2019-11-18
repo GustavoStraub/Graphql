@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { graphql} from 'react-apollo'
 import { getAuthorsQuery, AddBookMutation } from '../queries/queries'
-import {compose} from 'react-apollo'
+import {flowRight as compose} from 'lodash'
 
 function AddBook(props) {
   
@@ -11,7 +11,7 @@ const [Genre, setGenre] = useState("")
 const [AuthorId, setAuthorId] = useState("")
 
   function displayAuthors() {
-    var data = props.data;
+    var data = props.getAuthorsQuery;
     if (data.loading) {
       return (<option>Loading</option>)
     } else {
@@ -22,8 +22,15 @@ const [AuthorId, setAuthorId] = useState("")
   }
    function SubmitForm(e){
     e.preventDefault()
-    console.log(Name, Genre, AuthorId)
+    props.AddBookMutation({
+      variables:{
+        name: Name,
+        genre: Genre,
+        authorId: AuthorId
+      }
+    })
    }
+ 
 
   return (
     <form id="add-book" onSubmit={SubmitForm}>
@@ -52,5 +59,5 @@ const [AuthorId, setAuthorId] = useState("")
 
 export default compose(
   graphql(getAuthorsQuery, { name:"getAuthorsQuery"}),
-  graphql(addBookMutation, { name:"addBookMutation"})
+  graphql(AddBookMutation, { name:"AddBookMutation"})
 )(AddBook)
